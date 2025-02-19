@@ -1,0 +1,14 @@
+{
+  "name": "lutetia",
+  "version": "1.0.0",
+  "author": "Michael Rojas",
+  "license": "MIT",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "open": "cypress open"
+  },
+  "devDependencies": {
+    "cypress": "^14.0.3"
+  }
+}
