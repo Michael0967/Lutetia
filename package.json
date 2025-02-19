@@ -6,9 +6,16 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "open": "cypress open"
+    "open": "cypress open",
+    "lint": "standard",
+    "lint:fix": "standard --fix"
   },
   "devDependencies": {
-    "cypress": "^14.0.3"
+    "cypress": "^14.0.3",
+    "standard": "^17.1.2"
+  },
+  "standard": {
+    "globals": ["cy", "Cypress", "it", "describe", "expect"],
+    "ignore": ["cypress/videos/", "cypress/screenshots/"]
   }
 }
