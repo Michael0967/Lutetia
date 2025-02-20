@@ -54,7 +54,7 @@ describe('Side Cart', () => {
       cart.inputQuantityValidator(1)
     })
 
-    it.only('restricts non-numeric input', () => {
+    it('restricts non-numeric input', () => {
       cart.inputNums('10Abcde')
     })
 
@@ -72,6 +72,41 @@ describe('Side Cart', () => {
     it('updates the external cart counter', () => {
       cart.inputNums('10Abcde')
       cart.verifyCartCounter(10, 'external')
+    })
+  })
+
+  describe('Cart Upsell Tests', () => {
+    const upsellSection = Cypress.env('cart').upsell.section
+    let hasUpsell = false
+
+    beforeEach(() => {
+      cy.document().then(doc => {
+        hasUpsell = doc.querySelectorAll(upsellSection).length > 0
+      })
+    })
+
+    it('navigates upsell if available', function () {
+      if (!hasUpsell) this.skip()
+      cart.cartAction('open')
+      cart.isOpen(true)
+      cart.navigateUpsell('next')
+      cart.navigateUpsell('back')
+    })
+
+    it('adds a single upsell product', function () {
+      if (!hasUpsell) this.skip()
+      cart.cartAction('open')
+      cart.isOpen(true)
+      cart.addSingleUpsell()
+      cart.emptyMessage('hidden')
+      cart.cartItem('visible')
+    })
+
+    it.only('adds up to 8 upsell products and hides section when done', function () {
+      if (!hasUpsell) this.skip()
+      cart.cartAction('open')
+      cart.isOpen(true)
+      cart.addUpsellAllProductsToCart()
     })
   })
 })

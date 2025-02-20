@@ -157,6 +157,112 @@ class Cart {
         )
       })
   }
+
+  // upsell
+  navigateUpsell (direction) {
+    const selectors = {
+      next: { index: 1, shouldBeVisible: true },
+      back: { index: 0, shouldBeVisible: false }
+    }
+
+    if (!selectors[direction]) {
+      throw new Error(`🔴 Invalid upsell navigation direction: "${direction}". Expected one of: ${Object.keys(selectors).join(', ')}`)
+    }
+
+    const { index, shouldBeVisible } = selectors[direction]
+    const section = Cypress.env('cart').upsell.section
+    const arrow = Cypress.env('cart').upsell.arrow
+
+    cy.get(section)
+      .find(arrow)
+      .eq(index)
+      .should('be.visible')
+      .click()
+
+    cy.get(section)
+      .find(arrow)
+      .eq(0)
+      .should(shouldBeVisible ? 'be.visible' : 'not.be.visible')
+      .then($el => {
+        const isVisible = Cypress.dom.isVisible($el)
+        if (isVisible !== shouldBeVisible) {
+          throw new Error(`
+            🔴 Upsell arrow visibility mismatch
+            Expected: '${shouldBeVisible}'
+            But got: '${isVisible}'
+            
+            + expected - actual
+            - ${!shouldBeVisible}
+            + ${shouldBeVisible}
+          `)
+        }
+      })
+  }
+
+  addProductUpsell () {
+    cy.intercept('POST', '/cart/add.js').as('addProductUpsell')
+    cy.get(Cypress.env('cart').upsell.section)
+      .find(Cypress.env('cart').upsell.cardProduct)
+      .filter((_, element) => {
+        return Cypress.$(element).find(Cypress.env('cart').upsell.buttonAdd).length > 0
+      })
+      .then($filteredElements => {
+        if ($filteredElements.length === 0) {
+          throw new Error('No upsell product with add button found')
+        }
+
+        const randomIndex = Math.floor(Math.random() * $filteredElements.length)
+        cy.wrap($filteredElements.eq(randomIndex))
+          .find(Cypress.env('cart').upsell.buttonAdd)
+          .click()
+        cy.wait('@addProductUpsell')
+      })
+  }
+
+  addUpsellAllProductsToCart () {
+    cy.intercept('POST', '/cart/add.js').as('addProductUpsell')
+
+    function addNextProduct (addedCount, maxProductsToAdd) {
+      if (addedCount >= maxProductsToAdd) {
+        // ✅ Validar que el upsell ya no sea visible después de agregar los productos
+        cy.get(Cypress.env('cart').upsell.section).should('not.be.visible')
+        return
+      }
+
+      cy.get(Cypress.env('cart').upsell.section)
+        .find(Cypress.env('cart').upsell.cardProduct)
+        .filter((_, element) => {
+          return Cypress.$(element).find(Cypress.env('cart').upsell.buttonAdd).length > 0
+        })
+        .then($updatedElements => {
+          if ($updatedElements.length === 0) {
+            throw new Error('No upsell product with add button found after update')
+          }
+
+          cy.wrap($updatedElements.eq(0))
+            .find(Cypress.env('cart').upsell.buttonAdd)
+            .click()
+
+          cy.wait('@addProductUpsell').then(() => {
+            addNextProduct(addedCount + 1, maxProductsToAdd)
+          })
+        })
+    }
+
+    cy.get(Cypress.env('cart').upsell.section)
+      .find(Cypress.env('cart').upsell.cardProduct)
+      .filter((_, element) => {
+        return Cypress.$(element).find(Cypress.env('cart').upsell.buttonAdd).length > 0
+      })
+      .then($filteredElements => {
+        if ($filteredElements.length === 0) {
+          throw new Error('No upsell product with add button found')
+        }
+
+        const maxProductsToAdd = Math.min($filteredElements.length, 8)
+        addNextProduct(0, maxProductsToAdd)
+      })
+  }
 }
 
 export default new Cart()
