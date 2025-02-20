@@ -1,0 +1,13 @@
+{
+  "login": {
+    "email": "michael.rojas@gradiweb.com",
+    "password": "Gradiweb!"
+  },
+  
+  "createAccount": {
+    "name": "Tester",
+    "lastName": "QA",
+    "email": "michael.rojas@gradiweb.com",
+    "password": "Gradiweb!"
+  }  
+}

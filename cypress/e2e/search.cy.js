@@ -1,49 +1,50 @@
 import password from '../support/pages/password'
 import search from '../support/pages/search'
 
-describe('Search Functionality', () => {
-  const word = 'snowboard'
+describe('Search', () => {
+  const query = 'snowboard'
 
   beforeEach(() => {
-    cy.session('store_auth_session', () => {
+    cy.session('auth', () => {
       cy.visit(Cypress.env('STORE'))
       password.break()
     })
     cy.visit(`${Cypress.env('STORE')}/products/${Cypress.env('PRODUCT')}?preview_theme_id=${Cypress.env('PREVIEW')}`)
   })
 
-  it('should open and close the search bar', () => {
-    search.assertInputVisibility(false)
+  it('opens and closes search bar', () => {
+    search.assertVisible(false)
     search.open()
-    search.assertInputVisibility(true)
+    search.assertVisible(true)
     search.close()
-    search.assertInputVisibility(false)
+    search.assertVisible(false)
   })
 
-  it('should type a word and verify results contain it', () => {
-    search.open()
-    search.type(word)
-    search.checkResultsForSearchWord()
+  describe('Searching', () => {
+    beforeEach(() => {
+      search.open()
+      search.type(query)
+    })
+
+    it('shows matching results', () => {
+      search.checkResults()
+    })
+
+    it('searches with button', () => {
+      search.submit('button')
+      search.assertInput()
+    })
+
+    it('searches with enter key', () => {
+      search.submit('enter')
+      search.assertInput()
+    })
   })
 
-  it('should perform a search using the search button', () => {
+  it('keeps search bar closed on results page', () => {
     search.open()
-    search.type(word)
-    search.search('button')
-    search.assertInputValue()
-  })
-
-  it('should perform a search using the enter key shortcut', () => {
-    search.open()
-    search.type(word)
-    search.search('enter')
-    search.assertInputValue()
-  })
-
-  it('should ensure the search bar stays closed on the search results page', () => {
-    search.open()
-    search.type(word)
-    search.search('enter')
-    search.openLocked()
+    search.type(query)
+    search.submit('enter')
+    search.assertLocked()
   })
 })
