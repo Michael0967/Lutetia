@@ -9,7 +9,8 @@ module.exports = defineConfig({
   env: {
     STORE: 'https://printemps-a-paris.myshopify.com/',
     PASSWORD: 'paris',
-    PREVIEW: '175491252572'
+    PREVIEW: '175491252572',
+    PRODUCT: 'the-3p-fulfilled-snowboard'
   },
   e2e: {
     setupNodeEvents (on, config) {
