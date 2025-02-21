@@ -1,6 +1,6 @@
 class Account {
   page () {
-    cy.visit(`${Cypress.env('STORE')}/account?preview_theme_id=${Cypress.env('PREVIEW_THEME_ID')}`)
+    cy.visit(`${Cypress.env('STORE')}/account?preview_theme_id=${Cypress.env('PREVIEW')}`)
   }
 
   /**

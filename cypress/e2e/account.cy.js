@@ -2,7 +2,7 @@ import account from '../support/pages/account'
 import password from '../support/pages/password'
 
 describe('Account Management', () => {
-  const storeUrl = `${Cypress.env('STORE')}/account?preview_theme_id=${Cypress.env('PREVIEW_THEME_ID')}`
+  const storeUrl = `${Cypress.env('STORE')}/account?preview_theme_id=${Cypress.env('PREVIEW')}`
 
   beforeEach(() => {
     cy.session('store_auth_session', () => {
@@ -29,7 +29,7 @@ describe('Account Management', () => {
       account.page()
       account.inputLogin()
       account.loginFailed(false)
-      cy.contains('button', 'Log out').click()
+      cy.contains('Log out').click()
       cy.url().should('include', Cypress.env('STORE'), { timeout: 0 })
     })
   })
