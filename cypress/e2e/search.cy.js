@@ -13,11 +13,11 @@ describe('Search', () => {
   })
 
   it('opens and closes search bar', () => {
-    search.assertVisible(false)
+    search.assertInputVisibility(false)
     search.open()
-    search.assertVisible(true)
+    search.assertInputVisibility(true)
     search.close()
-    search.assertVisible(false)
+    search.assertInputVisibility(false)
   })
 
   describe('Searching', () => {
@@ -27,24 +27,24 @@ describe('Search', () => {
     })
 
     it('shows matching results', () => {
-      search.checkResults()
+      search.checkResultsForSearchWord()
     })
 
     it('searches with button', () => {
-      search.submit('button')
-      search.assertInput()
+      search.search('button')
+      search.assertInputValue()
     })
 
     it('searches with enter key', () => {
-      search.submit('enter')
-      search.assertInput()
+      search.search('enter')
+      search.assertInputValue()
     })
   })
 
   it('keeps search bar closed on results page', () => {
     search.open()
     search.type(query)
-    search.submit('enter')
-    search.assertLocked()
+    search.search('enter')
+    search.openLocked()
   })
 })

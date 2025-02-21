@@ -15,7 +15,7 @@ class Account {
     getCredentials.then(({ email, password }) => {
       cy.get(Cypress.env('account').login.email).type(email)
       cy.get(Cypress.env('account').login.password).type(password)
-      cy.contains('button', 'Sign in')
+      cy.contains('button', 'Sign in').click()
     })
   }
 

@@ -15,7 +15,17 @@
     "standard": "^17.1.2"
   },
   "standard": {
-    "globals": ["cy", "Cypress", "it", "describe", "expect", "beforeEach"],
-    "ignore": ["cypress/videos/", "cypress/screenshots/"]
+    "globals": [
+      "cy",
+      "Cypress",
+      "it",
+      "describe",
+      "expect",
+      "beforeEach"
+    ],
+    "ignore": [
+      "cypress/videos/",
+      "cypress/screenshots/"
+    ]
   }
 }

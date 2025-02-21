@@ -97,12 +97,12 @@ describe('Side Cart', () => {
       if (!hasUpsell) this.skip()
       cart.cartAction('open')
       cart.isOpen(true)
-      cart.addSingleUpsell()
+      cart.addProductUpsell()
       cart.emptyMessage('hidden')
       cart.cartItem('visible')
     })
 
-    it.only('adds up to 8 upsell products and hides section when done', function () {
+    it('adds up to 8 upsell products and hides section when done', function () {
       if (!hasUpsell) this.skip()
       cart.cartAction('open')
       cart.isOpen(true)
