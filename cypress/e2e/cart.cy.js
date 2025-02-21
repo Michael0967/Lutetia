@@ -71,6 +71,9 @@ describe('Side Cart', () => {
 
     it('updates the external cart counter', () => {
       cart.inputNums('10Abcde')
+      cart.cartAction('open')
+      cart.isOpen(false)
+
       cart.verifyCartCounter(10, 'external')
     })
   })

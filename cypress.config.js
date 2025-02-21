@@ -13,6 +13,7 @@ module.exports = defineConfig({
     PRODUCT: 'the-3p-fulfilled-snowboard'
   },
   e2e: {
+    quietMode: true,
     setupNodeEvents (on, config) {
       // implement node event listeners here
     }
